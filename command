@@ -12,8 +12,10 @@ try {
     $storage = $config['class']::makeFromArray($config);
 
     $router
-        ->add('redis', 'add', new \App\Console\AddHandler($storage))
-        ->add('redis', 'delete', new \App\Console\DeleteHandler($storage));
+        ->add('redis', 'add', new \App\Console\Storage\AddHandler($storage))
+        ->add('redis', 'delete', new \App\Console\Storage\DeleteHandler($storage))
+        ->add('redis', 'dump', new \App\Console\Storage\DumpHandler($storage))
+        ->add('redis', 'generate', new \App\Console\Storage\GenerateHandler($storage));
 
     $router->run(array_slice($argv, 1));
 } catch (Throwable $e) {

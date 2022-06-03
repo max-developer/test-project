@@ -3,8 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script>
+        (function () {
+            const ajax = (method, url) => new Promise((resolve, reject) => {
+                const req = new XMLHttpRequest();
+
+                req.addEventListener('load', () => {
+                    if (req.status === 200) {
+                        let data = JSON.parse(req.responseText);
+                        resolve(data)
+                    } else {
+                        reject(new Error(req.responseText))
+                    }
+                })
+
+                req.open(method, url, true);
+                req.send(null);
+            });
+
+
+            const list = (element) => {
+                let data = {};
+                return {
+                    set(value) {
+                        data = value;
+                        return this;
+                    },
+                    remove(key) {
+                        delete data[key];
+                        return this;
+                    },
+                    render() {
+                        let html = '';
+
+                        for (let key in data) {
+                            html += `<li>${key}: ${data[key]} <a href="#" class="remove" data-key="${key}">Удалить</a></li>`
+                        }
+
+                        element.innerHTML = `<ul>${html}</ul>`
+                    },
+                    on(name, listener) {
+                        element.addEventListener(name, listener);
+                        return this;
+                    }
+                };
+            }
+
+            window.addEventListener('load', function () {
+                const app = list(document.getElementById('app'));
+
+                ajax('GET', '/api/redis')
+                    .then((res) => app.set(res.data).render())
+                    .catch((e) => console.log(e))
+
+                app.on('click', (e) => {
+                    if (e.target.classList.contains('remove')) {
+                        let key = e.target.attributes['data-key'].value;
+                        ajax('DELETE', `/api/redis/${key}`)
+                            .then(() => app.remove(key).render())
+                            .catch((e) => console.log(e))
+                    }
+                });
+            })
+        })()
+    </script>
 </head>
 <body>
-
+<div id="app"></div>
 </body>
 </html>

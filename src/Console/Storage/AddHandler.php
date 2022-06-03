@@ -1,18 +1,9 @@
 <?php
 
-namespace App\Console;
+namespace App\Console\Storage;
 
-use App\Storage\StorageInterface;
-
-class AddHandler
+class AddHandler extends AbstractHandler
 {
-    private StorageInterface $storage;
-
-    public function __construct(StorageInterface $storage)
-    {
-        $this->storage = $storage;
-    }
-
     protected function validate(array $arguments): void
     {
         if (count($arguments) != 2) {
