@@ -1,0 +1,30 @@
+version: '3.3'
+
+networks:
+  private:
+    driver: bridge
+
+services:
+  php:
+    build:
+      context: '.'
+    networks:
+      - private
+    depends_on:
+      - redis
+      - memcached
+    ports:
+      - '8080:8080'
+    volumes:
+      - '.:/var/www'
+    command: php -S 0.0.0.0:8080 -t /var/www/public
+
+  redis:
+    image: redis:5-alpine
+    networks:
+      - private
+
+  memcached:
+    image: memcached
+    networks:
+      - private

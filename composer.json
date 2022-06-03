@@ -1,0 +1,19 @@
+{
+    "name": "max/test-project",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Max Rautkin",
+            "email": "mrautkin@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "7.4",
+        "ext-redis": "*"
+    }
+}
